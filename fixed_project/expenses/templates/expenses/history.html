@@ -1,0 +1,89 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="p-6">
+
+    <h1 class="text-3xl font-bold mb-6">📅 Expense Timeline</h1>
+
+    <!-- FILTER BOX -->
+    <form method="GET" class="bg-gray-900 p-5 rounded-xl mb-8 flex flex-wrap gap-5">
+
+        <!-- DATE -->
+        <div class="flex-1">
+            <label class="text-gray-300 mb-2 block">Date</label>
+            <input type="date" name="date" value="{{ selected_date }}"
+                class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700" />
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="flex-1">
+            <label class="text-gray-300 mb-2 block">Category</label>
+
+            <select name="category"
+                class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700">
+
+                <!-- Always show "All" option -->
+                <option value="All" {% if selected_category == "All" %}selected{% endif %}>
+                    All
+                </option>
+
+                <!-- Loop properly through categories -->
+                {% for value, label in categories %}
+                    <option value="{{ value }}"
+                        {% if selected_category == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- APPLY -->
+        <div class="flex items-end">
+            <button class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow">
+                Apply Filter
+            </button>
+        </div>
+
+    </form>
+
+
+    <!-- GROUPED EXPENSES -->
+    {% if grouped %}
+        {% for date, items in grouped.items %}
+            
+            <h2 class="text-xl font-bold text-blue-300 mt-6 mb-3">{{ date }}</h2>
+
+            <div class="space-y-3">
+                {% for e in items %}
+                    <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center shadow">
+
+                        <div>
+                            <p class="text-white font-semibold">{{ e.category }}</p>
+                            <p class="text-gray-400 text-sm">{{ e.description }}</p>
+                        </div>
+
+                        <p class="text-green-400 font-bold text-xl">
+                            ₹{{ e.amount }}
+                        </p>
+
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+        <div class="text-center mt-20">
+            <p class="text-5xl">😕</p>
+            <h2 class="text-gray-400 text-2xl mt-3">No Expenses Found</h2>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+

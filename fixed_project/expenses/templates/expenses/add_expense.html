@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Expense</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = { darkMode: "class" }
+  </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-100 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white dark:bg-gray-800 shadow-lg h-screen">
+    <div class="p-6 border-b dark:border-gray-700">
+      <h2 class="text-2xl font-bold">💰 Smart Expense</h2>
+    </div>
+
+    <nav class="mt-6 space-y-2 px-4">
+      <a href="{% url 'dashboard' %}" class="block p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">📊 Dashboard</a>
+      <a href="{% url 'add_expense' %}" class="block p-2 rounded bg-blue-500 text-white">➕ Add Expense</a>
+      <a href="{% url 'set_budget' %}" class="block p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">💰 Set Budget</a>
+      <a href="{% url 'change_password' %}" class="block p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">🔐 Change Password</a>
+    </nav>
+
+    <div class="absolute bottom-0 w-64 p-4 border-t dark:border-gray-700">
+      <a href="{% url 'logout' %}" class="block bg-red-500 text-white text-center py-2 rounded">
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-10">
+
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold">➕ Add New Expense</h1>
+
+      <button id="theme-toggle"
+        class="bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-lg text-gray-800 dark:text-gray-100">
+        🌙 Dark
+      </button>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="bg-white dark:bg-gray-800 shadow-lg p-8 rounded-xl w-full max-w-3xl">
+
+      <!-- 🔥 Form Errors Show Here -->
+      {% if form.errors %}
+      <div class="bg-red-200 text-red-800 p-3 rounded mb-4">
+        {{ form.errors }}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'add_expense' %}">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div>
+            <label class="text-sm font-semibold block mb-2">Amount</label>
+            {{ form.amount }}
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold block mb-2">Category</label>
+            {{ form.category }}
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold block mb-2">Description</label>
+            {{ form.description }}
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold block mb-2">Date</label>
+            {{ form.date }}
+          </div>
+
+        </div>
+
+        <button
+          class="mt-8 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold w-full">
+          Add Expense
+        </button>
+
+      </form>
+    </div>
+
+  </main>
+
+  <!-- Dark Mode Toggle Script -->
+  <script>
+    const btn = document.getElementById("theme-toggle");
+    const html = document.documentElement;
+
+    if (localStorage.getItem("theme") === "dark") {
+      html.classList.add("dark");
+      btn.textContent = "☀️ Light";
+    }
+
+    btn.onclick = () => {
+      html.classList.toggle("dark");
+      if (html.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        btn.textContent = "☀️ Light";
+      } else {
+        localStorage.setItem("theme", "light");
+        btn.textContent = "🌙 Dark";
+      }
+    };
+  </script>
+
+</body>
+
+</html>
+
